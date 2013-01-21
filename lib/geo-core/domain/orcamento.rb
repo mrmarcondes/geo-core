@@ -1,7 +1,7 @@
 require_relative '../../geo-core.rb'
 
 module Geo
-	module Core
+	module Domain
 		class Orcamento
 			include Mongoid::Document
 			store_in collection: "orcamentos"
@@ -9,7 +9,7 @@ module Geo
 			field :cliente
 			field :descricao
 
-			has_many :itens, class_name: 'Geo::Core::ItemOrcamento'
+			has_many :itens, class_name: 'Geo::Domain::ItemOrcamento'
 
 			validates :cliente, :descricao, presence: true
 
