@@ -4,9 +4,9 @@ development:
       database: geo
       hosts:
         - localhost:27017
-production:
+test:
   sessions:
     default:
-      database: geo
+      database: geo_test
       hosts:
         - localhost:27017        

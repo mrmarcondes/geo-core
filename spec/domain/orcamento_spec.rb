@@ -1,4 +1,4 @@
-require_relative '../spec_helper.rb'
+require 'spec_helper'
 
 describe Geo::Domain::Orcamento do
   describe "criacao" do
@@ -6,6 +6,7 @@ describe Geo::Domain::Orcamento do
       orcamento = Geo::Domain::Orcamento.new(cliente: "Cliente", descricao: "descricao")
       orcamento.cliente.should eq("Cliente")
       orcamento.descricao.should eq("descricao")
+      orcamento.itens.should_not be_nil
     end
 
     it "nao deve criar passando parametros invalidos" do

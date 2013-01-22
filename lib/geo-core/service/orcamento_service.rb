@@ -21,6 +21,11 @@ module Geo
 				end
 			end
 
+			def self.todos
+				return Geo::Domain::Orcamento.all
+			end
+
+
 			private
 				def self.criar_itens_para(orcamento, param)
 					return if !param
