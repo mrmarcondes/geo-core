@@ -4,53 +4,37 @@ describe Geo::Service::Orcamento do
 
   describe "criando orcamento" do
     let(:orcamento_valido) do
-      orcamento_valido = {descricao: "minha_descricao", cliente: "meu_cliente", 
-                itens_attributes: {
-                              "0" => {codigo_material: "1.1", quantidade: "1"}, 
-                              "1" => {codigo_material: "2.2", quantidade: "2"}
-                            }
-                }
+      {
+        descricao: "minha_descricao", cliente: "meu_cliente", 
+        itens_attributes: {
+                          "0" => {codigo_material: "1.1", quantidade: "1"}, 
+                          "1" => {codigo_material: "2.2", quantidade: "2"}
+                          }
+      }
     end
 
-    let(:orcamento_valido_sem_itens) do
-      orcamento_valido = {descricao: "minha_descricao", cliente: "meu_cliente"}
-    end
-
-    let(:orcamento_invalido) do
-      orcamento_invalido = {descricao: nil, cliente: "meu_cliente", 
-                itens_attributes: {
-                              "0" => {codigo_material: "1.1", quantidade: "1"}, 
-                              "1" => {codigo_material: "2.2", quantidade: "2"}
-                            }
-                }
-    end
-
-    it "deve criar uma instancia vazia de orcamento e itens" do
-      orcamento= Geo::Service::Orcamento.novo
-      orcamento.should_not be_nil
-      orcamento.should have(0).itens
-    end
+    let(:orcamento_invalido) {{descricao: nil, cliente: "meu_cliente"}}
 
     it "deve salvar um orcamento valido" do
-      orcamento = Geo::Service::Orcamento.salvar orcamento_valido
-      orcamento.should be_valid
-      orcamento.descricao.should be_equal(orcamento_valido[:descricao])
-      orcamento.cliente.should be_equal(orcamento_valido[:cliente])
-
-      orcamento.itens.should have(2).itens
+      orcamento = mock(:Orcamento, :itens => [])
+      Geo::Domain::Orcamento.should_receive(:new).with(orcamento_valido).and_return(orcamento)
+      orcamento.should_receive(:valid?).and_return(true)
+      orcamento.should_receive(:save)
+      orcamento.should_receive(:itens=).with(Array.new)
+      Geo::Service::Orcamento.salvar orcamento_valido
     end
-
-    it "deve salvar um orcamento valido sem itens" do
-      orcamento = Geo::Service::Orcamento.salvar orcamento_valido_sem_itens
-      orcamento.should be_valid
-      orcamento.descricao.should be_equal(orcamento_valido_sem_itens[:descricao])
-      orcamento.cliente.should be_equal(orcamento_valido_sem_itens[:cliente])
-    end
-
 
     it "deve rejeitar um orcamento invalido" do
-      lambda {orcamento = Geo::Service::Orcamento.salvar orcamento_invalido}.should raise_error()
+      orcamento= mock(:Orcamento, :itens => [], :errors => TypeError.new)
+      Geo::Domain::Orcamento.should_receive(:new).with(orcamento_invalido).and_return(orcamento)
+      orcamento.should_receive(:valid?).and_return(false)
+      expect { Geo::Service::Orcamento.salvar orcamento_invalido}.to raise_error(orcamento.errors)
     end
+  end
+
+  describe "localizacao" do
+    it "deve localizar o endereco de um item de orcamento a partir de latitude e longitude fornecidos"
+
   end
 
 end

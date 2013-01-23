@@ -9,6 +9,9 @@ module Geo
 
 			field :codigo_material
 			field :quantidade
+			field :endereco_instalacao
+			field :latitude, type: Float
+			field :longitude, type: Float
 
 			validates :codigo_material, :quantidade, presence: true
 			validates :quantidade, :numericality => true
