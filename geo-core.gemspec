@@ -13,6 +13,7 @@ Gem::Specification.new do |gem|
   gem.homepage      = ""
 
   gem.add_dependency  "mongoid"
+  gem.add_dependency  "geocoder"
 
   gem.files         = Dir['lib/**/*.rb'] + Dir['lib/*.yml'] + Dir['*.*']
   gem.require_paths = ["lib"]

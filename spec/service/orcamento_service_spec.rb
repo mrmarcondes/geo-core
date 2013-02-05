@@ -33,7 +33,31 @@ describe Geo::Service::Orcamento do
   end
 
   describe "localizacao" do
-    it "deve localizar o endereco de um item de orcamento a partir de latitude e longitude fornecidos"
+    let(:latitude){double(:Float)}
+    let(:longitude){double(:Float)}
+    let(:endereco){double(:endereco)}
+    let(:item_orcamento){mock(:ItemOrcamento, latitude: 0, longitude: 0)}
+
+    it "deve localizar o endereco de um item de orcamento a partir de latitude e longitude fornecidos" do
+      Geo::Domain::ItemOrcamento.should_receive(:find).with(:item_orcamento_id).and_return(item_orcamento)
+      Geo::Service::Orcamento.should_receive(:atualizar_endereco).with(item_orcamento, latitude, longitude).and_return(item_orcamento)
+      Geo::Service::Orcamento.atualizar_localizacao(:item_orcamento_id => :item_orcamento_id, latitude: latitude, longitude: longitude)
+    end
+
+    it "nao deve localizar o endereco de um item de orcamento invalido" do
+      Geo::Domain::ItemOrcamento.should_receive(:find).with(:item_orcamento_id).and_return(nil)
+      Geo::Service::Orcamento.atualizar_localizacao(:item_orcamento_id => :item_orcamento_id, latitude: latitude, longitude: longitude)
+    end
+
+    it "nao deve localizar o endereco de um item de orcamento sem latitude e longitude" do
+      Geo::Domain::ItemOrcamento.should_receive(:find).with(:item_orcamento_id).and_return(item_orcamento)
+      Geo::Service::Orcamento.atualizar_localizacao(:item_orcamento_id => :item_orcamento_id)
+    end
+
+    it "nao deve localizar o endereco de um item de orcamento invalido, sem latitude e longitude" do
+      Geo::Domain::ItemOrcamento.should_receive(:find).with(:item_orcamento_id).and_return(item_orcamento)
+      Geo::Service::Orcamento.atualizar_localizacao(:item_orcamento_id => :item_orcamento_id)
+    end
 
   end
 

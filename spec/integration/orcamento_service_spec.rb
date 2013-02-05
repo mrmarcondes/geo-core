@@ -86,7 +86,48 @@ describe Geo::Service::Orcamento do
       orcamento= Geo::Service::Orcamento.por_id "chave_invalida"
       orcamento.should be_nil
     end
+  end
 
+  describe "localizacao de item de orcamento" do
+    let(:orcamento_valido) do
+      {
+        descricao: "minha_descricao", cliente: "meu_cliente", 
+        itens_attributes: {
+                            "0" => {codigo_material: "1.1", quantidade: "1"}, 
+                            "1" => {codigo_material: "2.2", quantidade: "2"}
+                          }
+      }
+    end
+
+    before(:each) do
+      @orcamento_salvo= Geo::Service::Orcamento.salvar orcamento_valido
+    end
+
+    it "deve encontrar um item de orcamento" do
+      latitude= 10.0
+      longitude= 10.0
+      orcamento= Geo::Service::Orcamento.por_id(@orcamento_salvo)
+      item_orcamento= orcamento.itens[0]
+      item_orcamento= Geo::Service::Orcamento.atualizar_localizacao(item_orcamento_id: item_orcamento.id,
+                                                    latitude: latitude,
+                                                    longitude: longitude)
+      item_orcamento.latitude.should == 10.0
+      item_orcamento.longitude.should == 10.0
+      item_orcamento.endereco_instalacao.should_not be_nil
+    end
+
+
+    it "deve localizar endereco a partir de coordenadas fornecidas" do
+      latitude= -23.5279532
+      longitude= -46.7306078
+
+      orcamento= Geo::Service::Orcamento.por_id(@orcamento_salvo)
+      item_orcamento= orcamento.itens[0]
+      item_orcamento= Geo::Service::Orcamento.atualizar_localizacao(item_orcamento_id: item_orcamento.id,
+                                                    latitude: latitude,
+                                                    longitude: longitude)
+      item_orcamento.endereco_instalacao.should include('Rua Carlos Weber, 790')
+    end
   end
 
 end
