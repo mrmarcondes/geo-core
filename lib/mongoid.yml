@@ -13,6 +13,8 @@ test:
   options:
     raise_not_found_error: false
 production:
-  uri: <%= ENV['MONGOHQ_URL'] %>
-  raise_not_found_error: false
-    
+  sessions:
+    default:
+      uri: <%= ENV['MONGOHQ_URL'] %>
+    options:
+      raise_not_found_error: false
