@@ -43,6 +43,10 @@ module Geo
 				return Geo::Domain::Orcamento.find id
 			end
 
+			def self.item_orcamento_por_id id
+				return Geo::Domain::ItemOrcamento.find id
+			end
+
 			def self.atualizar_localizacao(params)
 				item_orcamento= Geo::Domain::ItemOrcamento.find(params[:item_orcamento_id])
 				if item_orcamento and params[:latitude] and params[:longitude]

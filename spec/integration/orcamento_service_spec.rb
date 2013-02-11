@@ -72,7 +72,15 @@ describe Geo::Service::Orcamento do
   end
 
   describe "finders" do
-    let(:orcamento_1){orcamento_1 = {descricao: "descricao_1", cliente: "cliente_1"}}
+    let(:orcamento_1) do
+      {
+        descricao: "minha_descricao", cliente: "meu_cliente", 
+        itens_attributes: {
+                            "0" => {codigo_material: "1.1", quantidade: "1"}, 
+                            "1" => {codigo_material: "2.2", quantidade: "2"}
+                          }
+      }
+    end
 
     it "deve encontrar um orcamento especifico para uma chave valida" do
       novo_orcamento = Geo::Service::Orcamento.salvar orcamento_1
@@ -86,6 +94,17 @@ describe Geo::Service::Orcamento do
       orcamento= Geo::Service::Orcamento.por_id "chave_invalida"
       orcamento.should be_nil
     end
+
+    it "deve encontrar um item de orcamento especifico para uma chave valida" do
+      novo_orcamento = Geo::Service::Orcamento.salvar orcamento_1
+      item_orcamento = novo_orcamento.itens[0]
+
+      item= Geo::Service::Orcamento.item_orcamento_por_id item_orcamento.id
+      item.id.should eql(item_orcamento.id)
+      item.quantidade.should eql(item_orcamento.quantidade)
+    end
+
+
   end
 
   describe "localizacao de item de orcamento" do
