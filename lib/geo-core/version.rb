@@ -1,5 +1,5 @@
 module Geo
 	module Core
-	  VERSION = "0.0.10"
+	  VERSION = "0.0.13"
 	end
 end
